@@ -1,0 +1,1 @@
+g++ server.cpp -o ./server_run -lwsock32 -lWs2_32

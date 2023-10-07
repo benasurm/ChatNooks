@@ -1,0 +1,1 @@
+g++ client.cpp -o ./client_run -lwsock32 -lWs2_32
