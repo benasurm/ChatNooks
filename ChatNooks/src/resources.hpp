@@ -77,5 +77,5 @@ struct Messages
 	}
 };
 
-enum InputType { start_opt };
+enum InputType { itStartOpt, itSym, itEnterKey, itCommand, itNull };
 enum RoomOption { server, client };

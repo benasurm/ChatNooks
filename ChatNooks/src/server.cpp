@@ -91,5 +91,37 @@ int main()
 	char *ip = inet_ntoa(client_info.sin_addr);
 	printf("Connection with client (%s) established \n", ip);
 
+	char recvbuf[DEFAULT_BUFLEN];
+	int iResult;
+	int recv_buff_len = DEFAULT_BUFLEN;
+	do
+	{
+		iResult = recv(ClientSocket, &recvbuf[0], recv_buff_len,
+			0);
+		if(iResult > 0)
+		{
+			printf("Bytes recevied from %s : %d\n", ip, iResult);
+			printf("Message from %s: \n", ip);
+			for(int i = 0; i < iResult; i++)
+			{
+				printf("%c", recvbuf[i]);
+				if(i % 15 == 0) printf("\n");
+			}
+		}
+		else if(iResult == 0)
+		{
+			printf("Connection with %s is closing...\n", ip);
+			closesocket(ClientSocket);
+		}
+		else
+		{
+			printf("Recv failed: %d\n", WSAGetLastError());
+			closesocket(ClientSocket);
+			WSACleanup();
+			return 0;
+		}
+	} 
+	while(iResult > 0);
+
 	return 1;
 }

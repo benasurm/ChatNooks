@@ -1,4 +1,5 @@
 #include "net_functions.hpp"
+#include "client_stream.hpp"
 
 void GetIPAddress(int argc, char *argv[],
 	std::string &IP_ADDRESS, Messages &mess_obj)
@@ -37,6 +38,7 @@ bool ConnectToServerResult(SOCKET &ConnectSocket, addrinfo *ptr)
 	return true;
 }
 
+
 int main(int argc, char *argv[])
 {
 	std::string IP_ADDRESS;
@@ -56,7 +58,23 @@ int main(int argc, char *argv[])
 	if(!GetAddressInfoResult(&IP_ADDRESS[0], &hints, &result)) return 0;
 
 	SOCKET ConnectSocket = INVALID_SOCKET;
-	ConnectToServerResult(ConnectSocket, result);
+	if(!ConnectToServerResult(ConnectSocket, result)) return 0;
+
+	int iResult;
+	int recv_buff_len = DEFAULT_BUFLEN;
+
+	while(true)
+	{
+		char msg_buff[DEFAULT_BUFLEN];
+		int data_len = ReadMessageBuffer(&msg_buff[0]);
+		if(data_len > 0)
+		{
+			iResult = send(ConnectSocket, &msg_buff[0],
+				data_len, 0);
+		}
+		else if(data_len == -1) break;
+		else printf("Empty data cannot be sent. \n");
+	}
 
 	closesocket(ConnectSocket);
 	WSACleanup();
