@@ -1,2 +1,2 @@
 # ChatNooks
-# A simple console-based chat app in developement.
+# A simple console-based chat app.
